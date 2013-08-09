@@ -18,9 +18,8 @@ import java.io.InputStreamReader;
 
 public class HealthCheckIntegrationTest {
 
-    // This test requires the existence of a property file at: ../properties/card-service.yml
-    public static final String CONFIG_FILE = "backlogitem-service.yml";
-    public static final String PROPERTIES_PATH = "resources/config-for-health-check-integration-test/";
+    public static final String CONFIG_FILE = "service-config-for-health-check-integration-test.yml";
+    public static final String PROPERTIES_PATH = "src/test/resources/";
 
     private DropwizardServiceRule<BacklogItemServiceConfiguration> serviceRule = new DropwizardServiceRule<BacklogItemServiceConfiguration>(BacklogItemService.class, PROPERTIES_PATH + CONFIG_FILE);
 
