@@ -81,8 +81,6 @@ jar {
  }
 
 
-ant.importBuild 'build.xml'
-
 
 apply plugin: 'checkstyle'
 
