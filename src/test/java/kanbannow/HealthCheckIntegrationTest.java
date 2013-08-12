@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static org.fest.assertions.api.Fail.fail;
+
 
 public class HealthCheckIntegrationTest {
 
@@ -33,6 +35,9 @@ public class HealthCheckIntegrationTest {
         String uri = getHealthCheckURL();
         HttpResponse httpResponse = callHealthCheck(uri);
         validateResponseFromHealthCheck(httpResponse);
+        BacklogItemService backlogItemService = getServiceRule().getService();
+        if( backlogItemService.warningOrErrorWasLogged())
+           fail("Errors or warnings occured");
     }
 
     private void validateResponseFromHealthCheck(HttpResponse httpResponse) throws IOException {
