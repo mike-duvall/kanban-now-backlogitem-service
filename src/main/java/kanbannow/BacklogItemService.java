@@ -12,7 +12,6 @@ import kanbannow.logback.HealthCheckErrorRecordingAppender;
 import kanbannow.resources.HelloWorldResource;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
-import javax.ws.rs.GET;
 
 
 public class BacklogItemService extends Service<BacklogItemServiceConfiguration> {
