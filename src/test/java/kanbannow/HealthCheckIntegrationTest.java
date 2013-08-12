@@ -37,7 +37,7 @@ public class HealthCheckIntegrationTest {
         validateResponseFromHealthCheck(httpResponse);
         BacklogItemService backlogItemService = getServiceRule().getService();
         if( backlogItemService.warningOrErrorWasLogged())
-           fail("Errors or warnings occured");
+           fail("Test failed because service logged errors or warnings");
     }
 
     private void validateResponseFromHealthCheck(HttpResponse httpResponse) throws IOException {

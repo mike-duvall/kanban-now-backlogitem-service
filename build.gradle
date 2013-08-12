@@ -54,7 +54,7 @@ dependencies {
     compile 'junit:junit:4.+'
 
 
-    compile files('local-lib/ojdbc6_g.jar')
+//    compile files('local-lib/ojdbc6_g.jar')
 
 
 
