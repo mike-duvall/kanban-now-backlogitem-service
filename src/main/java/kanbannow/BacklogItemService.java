@@ -10,7 +10,7 @@ import kanbannow.health.BacklogItemHealthCheck;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import kanbannow.logback.LogLevelTripwireAppender;
-//import kanbannow.resources.HelloWorldResource;
+import kanbannow.resources.HelloWorldResource;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 
@@ -34,7 +34,7 @@ public class BacklogItemService extends Service<BacklogItemServiceConfiguration>
     // Test change
     @Override
     public void run(BacklogItemServiceConfiguration configuration, Environment environment) throws Exception {
-//        environment.addResource(new HelloWorldResource());
+        environment.addResource(new HelloWorldResource());
         environment.addHealthCheck(new BacklogItemHealthCheck());
         setupExceptionThrowingLogger();
     }
