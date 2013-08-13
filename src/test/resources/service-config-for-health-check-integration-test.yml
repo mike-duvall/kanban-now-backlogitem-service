@@ -1,2 +1,18 @@
 logging:
   level: INFO
+
+  file:
+
+    # If true, write log statements to a file.
+    enabled: true
+
+    # Do not write log statements below this threshold to the file.
+    threshold: WARN
+
+
+    # The file to which statements will be logged.
+    #
+    # If enabled is true, this must be specified.
+    currentLogFilename: ./healthcheck-service.log
+
+    archive: false

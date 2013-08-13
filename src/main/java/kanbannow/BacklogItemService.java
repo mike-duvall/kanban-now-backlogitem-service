@@ -34,7 +34,7 @@ public class BacklogItemService extends Service<BacklogItemServiceConfiguration>
     // Test change
     @Override
     public void run(BacklogItemServiceConfiguration configuration, Environment environment) throws Exception {
-        environment.addResource(new HelloWorldResource());
+//        environment.addResource(new HelloWorldResource());
         environment.addHealthCheck(new BacklogItemHealthCheck());
         setupExceptionThrowingLogger();
     }

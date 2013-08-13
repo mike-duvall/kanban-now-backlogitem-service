@@ -2,15 +2,20 @@ package kanbannow;
 
 import com.yammer.dropwizard.config.ConfigurationException;
 import com.yammer.dropwizard.testing.junit.DropwizardServiceRule;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,14 +35,42 @@ public class HealthCheckIntegrationTest {
         return serviceRule;
     }
 
+    @BeforeClass
+    public static void beforeClass() {
+        deletePreviousLog();
+    }
+
+    private static void deletePreviousLog() {
+        File logFile = new File("healthcheck-service.log");
+        if( logFile.exists())
+            logFile.delete();
+    }
+
     @Test
     public void healthCheckShouldReturnHealthy() throws IOException, ConfigurationException {
         String uri = getHealthCheckURL();
         HttpResponse httpResponse = callHealthCheck(uri);
         validateResponseFromHealthCheck(httpResponse);
-        BacklogItemService backlogItemService = getServiceRule().getService();
-        if( backlogItemService.warningOrErrorWasLogged())
-           fail("Test failed because service logged errors or warnings");
+        checkForErrorsInLogFile();
+//        BacklogItemService backlogItemService = getServiceRule().getService();
+//        if( backlogItemService.warningOrErrorWasLogged())
+//           fail("Test failed because service logged errors or warnings");
+    }
+
+    private void checkForErrorsInLogFile() throws IOException {
+        File logFile = new File("healthcheck-service.log");
+        if( !logFile.exists())
+            throw new RuntimeException("Error:  Expected logfile");
+
+        BufferedReader br = new BufferedReader(new FileReader(logFile));
+        String line;
+        while ((line = br.readLine()) != null) {
+            if( StringUtils.contains(line, "ERROR") || StringUtils.contains(line, "WARN") ) {
+                br.close();
+                throw new RuntimeException("Test failed:  ERRORS or WARN in log file");
+            }
+        }
+        br.close();
     }
 
     private void validateResponseFromHealthCheck(HttpResponse httpResponse) throws IOException {
