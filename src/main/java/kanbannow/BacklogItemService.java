@@ -1,6 +1,7 @@
 package kanbannow;
 
 
+import ch.qos.logback.classic.Level;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
@@ -8,7 +9,7 @@ import kanbannow.health.BacklogItemHealthCheck;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import kanbannow.logback.HealthCheckErrorRecordingAppender;
+import kanbannow.logback.LogLevelTripwireAppender;
 import kanbannow.resources.HelloWorldResource;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
@@ -17,7 +18,7 @@ import ch.qos.logback.classic.LoggerContext;
 public class BacklogItemService extends Service<BacklogItemServiceConfiguration> {
 
 
-    private HealthCheckErrorRecordingAppender appender;
+    private LogLevelTripwireAppender appender;
 
 
     public static void main(String[] args) throws Exception {
@@ -46,7 +47,7 @@ public class BacklogItemService extends Service<BacklogItemServiceConfiguration>
 
     private LoggerContext createAppender() {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        appender = new HealthCheckErrorRecordingAppender();
+        appender = new LogLevelTripwireAppender(Level.WARN);
         appender.setContext(loggerContext);
         PatternLayoutEncoder encoder = createEncoder(loggerContext);
         appender.setEncoder(encoder);
@@ -64,48 +65,9 @@ public class BacklogItemService extends Service<BacklogItemServiceConfiguration>
 
 
     public boolean warningOrErrorWasLogged() {
-        return appender.wasWarningOrErrorLogged();
+        return appender.wasThresholdReached();
     }
 
 
-//    private void setupExampleLogger() {
-//        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-//
-//        RollingFileAppender rfAppender = new RollingFileAppender();
-//        rfAppender.setContext(loggerContext);
-//        rfAppender.setFile("testFile.log");
-//        FixedWindowRollingPolicy rollingPolicy = new FixedWindowRollingPolicy();
-//        rollingPolicy.setContext(loggerContext);
-//        // rolling policies need to know their parent
-//        // it's one of the rare cases, where a sub-component knows about its parent
-//        rollingPolicy.setParent(rfAppender);
-//        rollingPolicy.setFileNamePattern("testFile.%i.log.zip");
-//        rollingPolicy.start();
-//
-//        SizeBasedTriggeringPolicy triggeringPolicy = new SizeBasedTriggeringPolicy();
-//        triggeringPolicy.setMaxFileSize("5MB");
-//        triggeringPolicy.start();
-//
-//        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-//        encoder.setContext(loggerContext);
-//        encoder.setPattern("%-4relative [%thread] %-5level %logger{35} - %msg%n");
-//        encoder.start();
-//
-//        rfAppender.setEncoder(encoder);
-//        rfAppender.setRollingPolicy(rollingPolicy);
-//        rfAppender.setTriggeringPolicy(triggeringPolicy);
-//
-//        rfAppender.start();
-//
-//        // attach the rolling file appender to the logger of your choice
-//        Logger logbackLogger = loggerContext.getLogger("Main");
-//        logbackLogger.addAppender(rfAppender);
-//
-//        // OPTIONAL: print logback internal status messages
-//        StatusPrinter.print(loggerContext);
-//
-//        // log something
-//        logbackLogger.debug("hello");
-//    }
 
 }

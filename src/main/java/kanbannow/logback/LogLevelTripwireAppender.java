@@ -9,10 +9,16 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
 
-public class HealthCheckErrorRecordingAppender extends AppenderBase<ILoggingEvent> {
+public class LogLevelTripwireAppender extends AppenderBase<ILoggingEvent> {
 
     private PatternLayoutEncoder encoder;
-    private boolean warningOrErrorWasLogged = false;
+    private boolean thresholdWasReached = false;
+    private Level logLevelThreshold;
+
+
+    public LogLevelTripwireAppender(Level aLogLevel) {
+        this.logLevelThreshold = aLogLevel;
+    }
 
 
     @Override
@@ -38,14 +44,14 @@ public class HealthCheckErrorRecordingAppender extends AppenderBase<ILoggingEven
 
     public void append(ILoggingEvent event) {
         Level eventLevel = event.getLevel();
-        if( eventLevel.isGreaterOrEqual(Level.WARN)) {
-            warningOrErrorWasLogged = true;
+        if( eventLevel.isGreaterOrEqual(this.logLevelThreshold)) {
+            thresholdWasReached = true;
         }
     }
 
 
-    public boolean wasWarningOrErrorLogged() {
-        return this.warningOrErrorWasLogged;
+    public boolean wasThresholdReached() {
+        return this.thresholdWasReached;
     }
 
     public void setEncoder(PatternLayoutEncoder anEncoder) {
