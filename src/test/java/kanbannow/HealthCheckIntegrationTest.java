@@ -8,25 +8,25 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static org.fest.assertions.api.Fail.fail;
 
 
 public class HealthCheckIntegrationTest {
 
     public static final String CONFIG_FILE = "service-config-for-health-check-integration-test.yml";
     public static final String PROPERTIES_PATH = "src/test/resources/";
+    private static final String HEALTHCHECK_SERVICE_LOG = "healthcheck-service.log";
 
     private DropwizardServiceRule<BacklogItemServiceConfiguration> serviceRule = new DropwizardServiceRule<BacklogItemServiceConfiguration>(BacklogItemService.class, PROPERTIES_PATH + CONFIG_FILE);
 
@@ -41,7 +41,7 @@ public class HealthCheckIntegrationTest {
     }
 
     private static void deletePreviousLog() {
-        File logFile = new File("healthcheck-service.log");
+        File logFile = new File(HEALTHCHECK_SERVICE_LOG);
         if( logFile.exists())
             logFile.delete();
     }
@@ -52,25 +52,46 @@ public class HealthCheckIntegrationTest {
         HttpResponse httpResponse = callHealthCheck(uri);
         validateResponseFromHealthCheck(httpResponse);
         checkForErrorsInLogFile();
-//        BacklogItemService backlogItemService = getServiceRule().getService();
-//        if( backlogItemService.warningOrErrorWasLogged())
-//           fail("Test failed because service logged errors or warnings");
     }
 
+
     private void checkForErrorsInLogFile() throws IOException {
-        File logFile = new File("healthcheck-service.log");
+        BufferedReader br = getLogFileReader();
+        scanForErrors(br);
+    }
+
+    private BufferedReader getLogFileReader() throws FileNotFoundException {
+        File logFile = getLogFile();
+        return new BufferedReader(new FileReader(logFile));
+    }
+
+
+    private void scanForErrors(BufferedReader br) throws IOException {
+        String line;
+        try {
+            while ((line = br.readLine()) != null)
+                processLine( line);
+        }
+        finally {
+            br.close();
+        }
+    }
+
+
+    private void processLine( String line) throws IOException {
+        if(lineContainsWarnOrError(line))
+            throw new RuntimeException("Test failed:  ERRORS or WARN in log file");
+    }
+
+    private boolean lineContainsWarnOrError(String line) {
+        return StringUtils.contains(line, "ERROR") || StringUtils.contains(line, "WARN");
+    }
+
+    private File getLogFile() {
+        File logFile = new File(HEALTHCHECK_SERVICE_LOG);
         if( !logFile.exists())
             throw new RuntimeException("Error:  Expected logfile");
-
-        BufferedReader br = new BufferedReader(new FileReader(logFile));
-        String line;
-        while ((line = br.readLine()) != null) {
-            if( StringUtils.contains(line, "ERROR") || StringUtils.contains(line, "WARN") ) {
-                br.close();
-                throw new RuntimeException("Test failed:  ERRORS or WARN in log file");
-            }
-        }
-        br.close();
+        return logFile;
     }
 
     private void validateResponseFromHealthCheck(HttpResponse httpResponse) throws IOException {
