@@ -10,7 +10,7 @@ import kanbannow.health.BacklogItemHealthCheck;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import kanbannow.logback.LogLevelTripwireAppender;
-import kanbannow.resources.HelloWorldResource;
+//import kanbannow.resources.HelloWorldResource;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 
