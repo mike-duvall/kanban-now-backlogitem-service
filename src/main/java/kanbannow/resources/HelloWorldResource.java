@@ -1,7 +1,7 @@
 package kanbannow.resources;
 
 import com.yammer.metrics.annotation.Timed;
-import kanbannow.BacklogItemService;
+
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
