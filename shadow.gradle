@@ -1,0 +1,36 @@
+buildscript { scriptHandler->
+    apply from: 'shadow-repositories.gradle', to: scriptHandler
+    dependencies {
+        classpath 'org.gradle.plugins:shadow:0.7.4'
+    }
+}
+
+
+
+apply plugin: org.gradle.api.plugins.shadow.ShadowPlugin
+
+
+shadow {
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+
+    transformer (org.gradle.api.plugins.shadow.transformers.ServiceFileTransformer.class) {
+    }
+
+    artifactAttached false
+
+}
+
+task shadowBuild(dependsOn: ["shadow", "check"]) << {
+
+}
+
+
+jar {
+    from(configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    manifest { attributes 'Main-Class': mainClassName }
+}

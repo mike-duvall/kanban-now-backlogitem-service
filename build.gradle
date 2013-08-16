@@ -1,36 +1,6 @@
-buildscript {
-    repositories {
-        maven {
-            name 'Gradle Shadow'
-            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
-        }
-    }
-    dependencies {
-        classpath 'org.gradle.plugins:shadow:0.7.4'
-    }
-}
-
-apply plugin: 'shadow'
 
 version = ""
 
-shadow {
-    exclude 'META-INF/*.DSA'
-    exclude 'META-INF/*.RSA'
-
-    transformer (org.gradle.api.plugins.shadow.transformers.ServiceFileTransformer.class) {
-
-    }
-
-    artifactAttached false
-
-    baseName 'kanban-now-backlog-item-service'
-}
-
-
-task shadowBuild(dependsOn: ["shadow", "check"]) << {
-
-}
 
 
 apply plugin: 'java'
@@ -56,8 +26,6 @@ dependencies {
 
 //    compile files('local-lib/ojdbc6_g.jar')
 
-
-
     testCompile 'com.yammer.dropwizard:dropwizard-testing:0.6.2'
 }
 
@@ -65,21 +33,15 @@ apply plugin: 'application'
 
 mainClassName = 'kanbannow.BacklogItemService'
 
-run {
-    args 'server', '../properties/backlog-item-service.yml'
-}
 
 archivesBaseName = 'kanban-now-backlog-item-service'
 
-jar {
-     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
-         exclude "META-INF/*.SF"
-         exclude "META-INF/*.DSA"
-         exclude "META-INF/*.RSA"
-     }
-    manifest { attributes 'Main-Class': 'kanbannow.BacklogItemService' }
- }
 
+
+apply from: "shadow.gradle"
+shadow {
+    baseName 'kanban-now-backlog-item-service'
+}
 
 
 
