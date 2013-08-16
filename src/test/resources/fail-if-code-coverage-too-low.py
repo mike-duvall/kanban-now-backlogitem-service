@@ -14,7 +14,7 @@ indexOfClosedAngleBracket = lastLine.rfind('>', 0, indexOfPercent)
 totalCodeCoveragePercent = lastLine[indexOfClosedAngleBracket+1:indexOfPercent]
 
 print "Total code coverage: " + totalCodeCoveragePercent
-requiredCodeCoverageLevel = 78
+requiredCodeCoverageLevel = 77
 if int(totalCodeCoveragePercent) < int(requiredCodeCoverageLevel):
     print "Code coverage failed.  Required coverage:" + str(requiredCodeCoverageLevel)  + ",  Actual coverage:" + str(totalCodeCoveragePercent)
     sys.exit(1)
