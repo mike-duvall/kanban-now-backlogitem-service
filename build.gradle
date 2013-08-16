@@ -1,9 +1,9 @@
+apply plugin: 'java'
+apply plugin: 'application'
 
 version = ""
-
-
-
-apply plugin: 'java'
+mainClassName = 'kanbannow.BacklogItemService'
+archivesBaseName = 'kanban-now-backlog-item-service'
 
 
 repositories {
@@ -29,20 +29,12 @@ dependencies {
     testCompile 'com.yammer.dropwizard:dropwizard-testing:0.6.2'
 }
 
-apply plugin: 'application'
-
-mainClassName = 'kanbannow.BacklogItemService'
-
-
-archivesBaseName = 'kanban-now-backlog-item-service'
-
 
 
 apply from: "shadow.gradle"
 shadow {
     baseName 'kanban-now-backlog-item-service'
 }
-
 
 
 apply from: "checkstyle.gradle"
