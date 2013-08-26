@@ -39,3 +39,4 @@ shadow {
 
 apply from: "checkstyle.gradle"
 apply from: "code-coverage.gradle"
+//apply from: "https://raw.github.com/mike-duvall/kanban-now-backlogitem-service/master/code-coverage.gradle"

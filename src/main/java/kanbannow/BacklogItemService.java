@@ -5,7 +5,7 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import kanbannow.health.BacklogItemHealthCheck;
-import kanbannow.resources.HelloWorldResource;
+import kanbannow.resources.BacklogItemResource;
 
 
 public class BacklogItemService extends Service<BacklogItemServiceConfiguration> {
@@ -25,7 +25,7 @@ public class BacklogItemService extends Service<BacklogItemServiceConfiguration>
 
     @Override
     public void run(BacklogItemServiceConfiguration configuration, Environment environment) throws Exception {
-        environment.addResource(new HelloWorldResource());
+        environment.addResource(new BacklogItemResource());
         environment.addHealthCheck(new BacklogItemHealthCheck());
     }
 
