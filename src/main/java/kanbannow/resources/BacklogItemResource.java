@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/backlogitem")
+@Path("/backlogitems")
 @Produces(MediaType.APPLICATION_JSON)
 public class BacklogItemResource {
 
