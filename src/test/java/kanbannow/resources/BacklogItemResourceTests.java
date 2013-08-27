@@ -16,7 +16,7 @@ public class BacklogItemResourceTests {
         BacklogItemResource backlogItemResource = new BacklogItemResource();
 
         // When
-        List<BacklogItem> backlogItemList = backlogItemResource.getBacklogItems();
+        List<BacklogItem> backlogItemList = backlogItemResource.getBacklogItemsForUser();
 
         // Then
         assertThat(backlogItemList).isEmpty();

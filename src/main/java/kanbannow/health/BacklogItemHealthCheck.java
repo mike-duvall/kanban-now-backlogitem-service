@@ -33,7 +33,7 @@ public class BacklogItemHealthCheck extends HealthCheck {
 
     private String buildURI() {
         int port = 9690;
-        return "http://localhost:" + port + "/backlogitems";
+        return "http://localhost:" + port + "/backlogitems/user/1";
     }
 
     private void verifyResponseWas200(HttpResponse httpResponse) {
